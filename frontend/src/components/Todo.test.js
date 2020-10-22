@@ -1,45 +1,47 @@
 //description and status are in the document
 import React from "react";
 import {render} from "@testing-library/react";
-import  Todo  from "./Todo"
+import Todo from "./Todo"
 import userEvent from "@testing-library/user-event";
+import { createMemoryHistory } from "history";
+import {Router} from "react-router-dom";
 
 
 describe("unit test :: Todo Component", () => {
-    it("show description in todo-card", ()  => {
-    //GIVEN
-        const todo ={
-            description: "do this",
-            status: "OPEN"
-        }
-        const {getByText} = render(<Todo {...todo} />);
-
-    //WHEN
-        const actual= getByText(/do this/i);
-
-    //THEN
-        expect(actual).toBeInTheDocument()
-    });
-
-    it("show status in todo-card", ()  => {
+    it("show description in todo-card", () => {
         //GIVEN
-        const todo ={
+        const todo = {
             description: "do this",
             status: "OPEN"
         }
         const {getByText} = render(<Todo {...todo} />);
 
         //WHEN
-        const actual= getByText(/open/i);
+        const actual = getByText(/do this/i);
+
+        //THEN
+        expect(actual).toBeInTheDocument()
+    });
+
+    it("show status in todo-card", () => {
+        //GIVEN
+        const todo = {
+            description: "do this",
+            status: "OPEN"
+        }
+        const {getByText} = render(<Todo {...todo} />);
+
+        //WHEN
+        const actual = getByText(/open/i);
 
         //THEN
         expect(actual).toBeInTheDocument()
     });
 
 //advance button is only shown for open or in progress todos
-    it('shows advance button only for OPEN todos',  () => {
+    it('shows advance button only for OPEN todos', () => {
         //GIVEN
-    const todo ={
+        const todo = {
             description: "do this",
             status: "OPEN"
         }
@@ -54,9 +56,9 @@ describe("unit test :: Todo Component", () => {
 
     });
 
-    it('shows advance button only for OPEN todos',  () => {
+    it('shows advance button only for OPEN todos', () => {
         //GIVEN
-        const todo ={
+        const todo = {
             description: "do this",
             status: "OPEN"
         }
@@ -71,9 +73,9 @@ describe("unit test :: Todo Component", () => {
 
     });
 
-    it('shows advance button NOT for DONE todos',  () => {
+    it('shows advance button NOT for DONE todos', () => {
         //GIVEN
-        const todo ={
+        const todo = {
             description: "do this",
             status: "DONE"
         }
@@ -87,9 +89,9 @@ describe("unit test :: Todo Component", () => {
         expect(actual).not.toBeInTheDocument()
 
     });
-    it('no buttons are shown when showButtons is false',  () => {
+    it('no buttons are shown when showButtons is false', () => {
         //GIVEN
-        const todo ={
+        const todo = {
             description: "do this",
             status: "DONE",
             showButtons: false
@@ -107,10 +109,10 @@ describe("unit test :: Todo Component", () => {
 
 
     //onAdvance is called with the todo’s data on click of advance button
-    it('onAdvance is called with the todo’s data on click of advance button',  () => {
+    it('onAdvance is called with the todo’s data on click of advance button', () => {
         //GIVEN
         const handler = jest.fn()
-        const todo ={
+        const todo = {
             description: "do this",
             status: "OPEN",
         }
@@ -124,6 +126,29 @@ describe("unit test :: Todo Component", () => {
 
     });
 
-})
+    it("should push the id path to the history object", () => {
+        // Given
+        const props = {
+            id: "istegal",
+            status: "OPEN",
+            description: "istegal"
+        };
+
+        const history = createMemoryHistory();
+
+        const {getByText} = render(
+            <Router history={history}>
+                <Todo {...props} />
+            </Router>
+        );
+
+        // When
+        const deleteButton = getByText(/delete/i);
+        userEvent.click(deleteButton);
+
+        // Then
+        expect(history.location.pathname).toBe("/delete/istegal");
+    });
+});
 
 
