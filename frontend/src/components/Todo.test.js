@@ -70,6 +70,41 @@ describe("unit test :: Todo Component", () => {
 
     });
 
+    it('shows advance button NOT for DONE todos',  () => {
+        //GIVEN
+        const todo ={
+            description: "do this",
+            status: "DONE"
+        }
+
+        const {queryByLabelText} = render(<Todo {...todo} />);
+        //WHEN
+
+        const actual = queryByLabelText(/advance/i);
+
+        //THEN
+        expect(actual).not.toBeInTheDocument()
+
+    });
+    //no buttons are shown when showButtons is false
+
+    it('no buttons are shown when showButtons is false',  () => {
+        //GIVEN
+        const todo ={
+            description: "do this",
+            status: "DONE",
+            showButtons: false
+        }
+
+        const {queryByRole} = render(<Todo {...todo} />);
+        //WHEN
+
+        const actual = queryByRole("button");
+
+        //THEN
+        expect(actual).not.toBeInTheDocument()
+
+    });
 
 })
 
