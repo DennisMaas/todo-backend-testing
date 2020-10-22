@@ -13,7 +13,7 @@ export default function Todo({ id, status, description, onAdvance, showButtons=t
             </h3>
             {showButtons && <ButtonGroup>
                 {status !== 'DONE' && (
-                    <button
+                    <button aria-label={"advance"}
                         onClick={() => onAdvance({id, description, status})}
                     >
                         Advance
