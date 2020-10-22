@@ -2,6 +2,7 @@
 import React from "react";
 import {render} from "@testing-library/react";
 import  Todo  from "./Todo"
+import userEvent from "@testing-library/user-event";
 
 
 describe("unit test :: Todo Component", () => {
@@ -86,8 +87,6 @@ describe("unit test :: Todo Component", () => {
         expect(actual).not.toBeInTheDocument()
 
     });
-    //no buttons are shown when showButtons is false
-
     it('no buttons are shown when showButtons is false',  () => {
         //GIVEN
         const todo ={
@@ -103,6 +102,25 @@ describe("unit test :: Todo Component", () => {
 
         //THEN
         expect(actual).not.toBeInTheDocument()
+
+    });
+
+
+    //onAdvance is called with the todo’s data on click of advance button
+    it('onAdvance is called with the todo’s data on click of advance button',  () => {
+        //GIVEN
+        const handler = jest.fn()
+        const todo ={
+            description: "do this",
+            status: "OPEN",
+        }
+        const {getByLabelText} = render(<Todo onAdvance={handler} {...todo} />);
+        //WHEN
+        const button = getByLabelText("advance")
+        userEvent.click(button);
+
+        //THEN
+        expect(handler).toHaveBeenCalledWith(todo)
 
     });
 
